@@ -11,7 +11,10 @@ import retrofit2.http.Path;
  */
 
 public interface CatAPI {
-    @GET("images/get?format=xml&results_per_page=20&category=hats")
-    Call<CatImages> listCatsWithHat();
+    interface Callback {
+        void response(CatImages response);
+    }
+
+    void getCatsWithHats(Callback callback);
 }
 

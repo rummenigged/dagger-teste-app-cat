@@ -13,6 +13,7 @@ import android.view.View;
 
 import com.example.rummenigged.daggertest.R;
 import com.example.rummenigged.daggertest.domain.FavoritesUseCase;
+import com.example.rummenigged.daggertest.repository.SharedPreferencesFavoritesRepository;
 import com.example.rummenigged.daggertest.view.adapter.ImagesAdapter;
 
 import java.util.List;
@@ -38,7 +39,8 @@ public class FavoritesActivity extends AppCompatActivity {
     private ImagesAdapter rvAdapter;
     private String userToken;
 
-    private FavoritesUseCase getFavoritesUseCase;
+    private FavoritesUseCase favoritesUseCase;
+    private SharedPreferencesFavoritesRepository sharedPreferencesFavoritesRepository;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -67,8 +69,9 @@ public class FavoritesActivity extends AppCompatActivity {
         }
         Log.d(TAG, "UserToken: " + userToken);
 
-        getFavoritesUseCase = new FavoritesUseCase(this, userToken);
-        getFavoritesUseCase.getFavorites(new FavoritesUseCase.Callback() {
+        sharedPreferencesFavoritesRepository = new SharedPreferencesFavoritesRepository(this, userToken);
+        favoritesUseCase = new FavoritesUseCase(sharedPreferencesFavoritesRepository);
+        favoritesUseCase.getFavorites(new FavoritesUseCase.Callback() {
             @Override
             public void favoriteUrlsUpdated(List<String> favoriteUrls) {
                 Log.d(TAG, "Updated favorites: " + favoriteUrls.toString());
@@ -79,8 +82,8 @@ public class FavoritesActivity extends AppCompatActivity {
 
     @Override
     protected void onDestroy() {
-        getFavoritesUseCase.clear();
-        getFavoritesUseCase = null;
+        favoritesUseCase.clear();
+        favoritesUseCase = null;
         super.onDestroy();
     }
 }

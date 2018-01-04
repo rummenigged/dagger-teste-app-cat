@@ -19,8 +19,8 @@ public class FavoritesUseCase {
 
     private FavoritesRepository repo;
 
-    public FavoritesUseCase(Context context, String userToken) {
-        this.repo = new FavoritesRepository(context, userToken);
+    public FavoritesUseCase(FavoritesRepository favoritesRepository) {
+        this.repo = favoritesRepository;
     }
 
     /**

@@ -15,6 +15,9 @@ import android.widget.ImageView;
 import com.example.rummenigged.daggertest.R;
 import com.example.rummenigged.daggertest.domain.CatImagesUseCase;
 import com.example.rummenigged.daggertest.domain.FavoritesUseCase;
+import com.example.rummenigged.daggertest.network.CatAPI;
+import com.example.rummenigged.daggertest.network.RetrofitCatAPI;
+import com.example.rummenigged.daggertest.repository.SharedPreferencesFavoritesRepository;
 import com.example.rummenigged.daggertest.view.adapter.ImagesAdapter;
 import com.plattysoft.leonids.ParticleSystem;
 
@@ -33,7 +36,9 @@ public class ListActivity extends AppCompatActivity {
     private String userToken;
     private RecyclerView recyclerView;
 
+    private SharedPreferencesFavoritesRepository sharedPreferencesFavoritesRepository;
     private FavoritesUseCase favoriteUseCase;
+    private CatAPI catAPI;
     private CatImagesUseCase catImagesUseCase;
 
     @Override
@@ -61,8 +66,11 @@ public class ListActivity extends AppCompatActivity {
         recyclerView.setAdapter(adapter);
 
 
-        favoriteUseCase = new FavoritesUseCase(this, userToken);
-        catImagesUseCase = new CatImagesUseCase();
+        sharedPreferencesFavoritesRepository = new SharedPreferencesFavoritesRepository(this, userToken);
+        favoriteUseCase = new FavoritesUseCase(sharedPreferencesFavoritesRepository);
+
+        catAPI = new RetrofitCatAPI();
+        catImagesUseCase = new CatImagesUseCase(catAPI);
 
         catImagesUseCase.getImagesUrls(new CatImagesUseCase.Callback() {
             @Override

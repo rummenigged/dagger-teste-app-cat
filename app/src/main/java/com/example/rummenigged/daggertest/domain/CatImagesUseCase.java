@@ -23,30 +23,23 @@ public class CatImagesUseCase {
         void imagesUrls(List<String> urls);
     }
 
-    private static String TAG = "CatImagesUseCase";
+    private CatAPI catAPI;
+
+    public CatImagesUseCase(CatAPI catAPI) {
+        this.catAPI = catAPI;
+    }
 
     public void getImagesUrls(final Callback callback) {
-        Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl("http://thecatapi.com/api/")
-                .addConverterFactory(SimpleXmlConverterFactory.create())
-                .build();
-        CatAPI retrofitTheCatApi = retrofit.create(CatAPI.class);
-        retrofitTheCatApi.listCatsWithHat().enqueue(new retrofit2.Callback<CatImages>() {
+        catAPI.getCatsWithHats(new CatAPI.Callback() {
             @Override
-            public void onResponse(Call<CatImages> call, Response<CatImages> response) {
+            public void response(CatImages response) {
                 ArrayList<String> imageUrls = new ArrayList<>();
-                if (response.body().catImages != null) {
-                    for (CatImage img : response.body().catImages) {
-                        Log.d(TAG, "Found: " + img.url);
+                if (response != null) {
+                    for (CatImage img : response.catImages) {
                         imageUrls.add(img.url);
                     }
                 }
                 callback.imagesUrls(imageUrls);
-            }
-
-            @Override
-            public void onFailure(Call<CatImages> call, Throwable t) {
-                Log.e(TAG, "Error fetching cat images", t);
             }
         });
     }
