@@ -8,12 +8,12 @@ import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.MenuItem;
 import android.widget.ImageView;
 
 import com.example.rummenigged.daggertest.App;
 import com.example.rummenigged.daggertest.R;
+import com.example.rummenigged.daggertest.component.UserDIComponent;
 import com.example.rummenigged.daggertest.domain.CatImagesUseCase;
 import com.example.rummenigged.daggertest.domain.FavoritesUseCase;
 import com.example.rummenigged.daggertest.repository.SharedPreferencesFavoritesRepository;
@@ -54,8 +54,9 @@ public class ListActivity extends AppCompatActivity {
         });
         recyclerView.setAdapter(adapter);
 
-        favoriteUseCase = new FavoritesUseCase(App.getFavoritesRepository());
-        catImagesUseCase = new CatImagesUseCase(App.getCAtAPIService());
+        favoriteUseCase = new FavoritesUseCase(UserDIComponent.get().getFavoritesRepository());
+        catImagesUseCase = new CatImagesUseCase(UserDIComponent.get().getCatAPIService());
+
         catImagesUseCase.getImagesUrls(new CatImagesUseCase.Callback() {
             @Override
             public void imagesUrls(List<String> urls) {

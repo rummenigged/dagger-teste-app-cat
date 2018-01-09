@@ -13,6 +13,7 @@ import android.view.View;
 
 import com.example.rummenigged.daggertest.App;
 import com.example.rummenigged.daggertest.R;
+import com.example.rummenigged.daggertest.component.UserDIComponent;
 import com.example.rummenigged.daggertest.domain.FavoritesUseCase;
 import com.example.rummenigged.daggertest.repository.SharedPreferencesFavoritesRepository;
 import com.example.rummenigged.daggertest.view.adapter.ImagesAdapter;
@@ -59,7 +60,7 @@ public class FavoritesActivity extends AppCompatActivity {
         rvAdapter = new ImagesAdapter(null);
         recyclerView.setAdapter(rvAdapter);
 
-        favoritesUseCase = new FavoritesUseCase(App.getFavoritesRepository());
+        favoritesUseCase = new FavoritesUseCase(UserDIComponent.get().getFavoritesRepository());
 //        sharedPreferencesFavoritesRepository = new SharedPreferencesFavoritesRepository(this, userToken);
 //        favoritesUseCase = new FavoritesUseCase(sharedPreferencesFavoritesRepository);
     }

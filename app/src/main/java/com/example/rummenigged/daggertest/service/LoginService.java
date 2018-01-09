@@ -1,5 +1,7 @@
 package com.example.rummenigged.daggertest.service;
 
+import android.util.Log;
+
 /**
  * Created by rummenigged on 04/01/18.
  */

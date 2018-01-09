@@ -12,7 +12,10 @@ import android.widget.TextView;
 
 import com.example.rummenigged.daggertest.App;
 import com.example.rummenigged.daggertest.R;
+import com.example.rummenigged.daggertest.component.AppDIComponent;
+import com.example.rummenigged.daggertest.component.UserDIComponent;
 import com.example.rummenigged.daggertest.domain.LoginUseCase;
+import com.example.rummenigged.daggertest.module.SharedPrefFavoritesRepoDIModule;
 
 /**
  * Created by rummenigged on 04/01/18.
@@ -52,7 +55,9 @@ public class LoginActivity extends AppCompatActivity{
 
     @Override
     protected void onResume() {
-        ((App) getApplication()).destroyFavoritesRepository();
+        if (UserDIComponent.get() != null){
+            UserDIComponent.get().close();
+        }
         super.onResume();
     }
 
@@ -65,7 +70,7 @@ public class LoginActivity extends AppCompatActivity{
         String token = uc.login(username, password);
 
         if (token != null) {
-            ((App) getApplication()).initializeFavoritesRepository(token);
+            UserDIComponent.initialize(new SharedPrefFavoritesRepoDIModule(AppDIComponent.get(), token));
             FavoritesActivity.launch(this);
         } else {
             errorTv.setVisibility(View.VISIBLE);
