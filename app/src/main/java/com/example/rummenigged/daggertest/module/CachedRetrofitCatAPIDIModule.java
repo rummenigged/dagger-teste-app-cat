@@ -8,7 +8,7 @@ import com.example.rummenigged.daggertest.network.RetrofitCatAPI;
  * Created by rummenigged on 08/01/18.
  */
 
-public class CachedRetrofitCatAPIDIModule implements CatAPIDIModule {
+public class CachedRetrofitCatAPIDIModule extends CatAPIDIModule {
 
     @Override
     public CatAPI provideCatAPI() {

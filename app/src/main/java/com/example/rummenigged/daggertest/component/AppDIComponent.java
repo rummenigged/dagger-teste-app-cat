@@ -6,16 +6,18 @@ import com.example.rummenigged.daggertest.module.AppDIModule;
 import com.example.rummenigged.daggertest.module.CatAPIDIModule;
 import com.example.rummenigged.daggertest.network.CatAPI;
 
+import javax.inject.Singleton;
+
+import dagger.Component;
+
 /**
  * Created by rummenigged on 08/01/18.
  */
 
-public class AppDIComponent {
+@Singleton
+@Component(modules = { AppDIModule.class, CatAPIDIModule.class})
+public abstract class AppDIComponent {
     private static AppDIComponent instance;
-    private AppDIModule appDIModule;
-    private CatAPIDIModule catAPIDIModule;
-    private Context appContext;
-    private CatAPI catAPI;
 
     public static AppDIComponent get(){
         return AppDIComponent.instance;
@@ -25,29 +27,15 @@ public class AppDIComponent {
         if (AppDIComponent.get() != null){
             throw new RuntimeException("AppDiComponent already initialized.");
         }else{
-            AppDIComponent.instance = new AppDIComponent(appDIModule, catAPIDIModule);
+            AppDIComponent.instance = DaggerAppDIComponent
+                                        .builder()
+                                        .appDIModule(appDIModule)
+                                        .catAPIDIModule(catAPIDIModule)
+                                        .build();
         }
     }
 
-    public AppDIComponent(AppDIModule appDIModule, CatAPIDIModule catAPIDIModule){
-        this.appDIModule = appDIModule;
-        this.catAPIDIModule = catAPIDIModule;
-    }
+    abstract public Context getAppContext();
 
-    public Context getAppContext(){
-        if (appContext == null){
-            appContext = appDIModule.provideAppContext();
-        }
-
-        return appContext;
-    }
-
-    public CatAPI getCatAPI(){
-        if (catAPI == null){
-            catAPI = catAPIDIModule.provideCatAPI();
-        }
-
-        return catAPI;
-    }
-
+    abstract public CatAPI getCatAPI();
 }
